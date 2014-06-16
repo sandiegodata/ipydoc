@@ -1,0 +1,9 @@
+#
+# Builds on the base ipython image to add Ambry
+#
+ 
+FROM ipython
+
+MAINTAINER Eric Busboom "eric@clarinova.com"
+
+RUN ambry library sync
