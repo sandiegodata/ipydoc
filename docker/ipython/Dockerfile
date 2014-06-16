@@ -57,16 +57,16 @@ RUN pip install jinja2
 RUN pip install ipython
 RUN python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 
-
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"
 
+VOLUME /notebooks
 
 # Create the default profile structure and replace the config file with a symlink to the one in the users folder.
 # This way, each user can have his own config and the password can be set individually.
 RUN ipython profile create default
-RUN rm ~/.ipython/profile_default/ipython_notebook_config.py
-RUN ln -s /notebooks/ipython_notebook_config.py ~/.ipython/profile_default/ipython_notebook_config.py
+COPY ipython_notebook_config.py /.ipython/profile_default/ipython_notebook_config.py
 
 EXPOSE 8888
 
-CMD ipython notebook  --ip=* --MappingKernelManager.time_to_dead=10 --MappingKernelManager.first_beat=3 --notebook-dir=/notebooks 
+CMD ipython notebook  --ip=* --MappingKernelManager.time_to_dead=10 --MappingKernelManager.first_beat=3 \
+    --notebook-dir=/notebooks  --NotebookApp.trust_xheaders=True

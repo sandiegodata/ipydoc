@@ -51,7 +51,7 @@ class RedisManager(object):
 
         self.ensure_frontend_only(user)
 
-        port = self.client.hget('ipy:port', user)
+        port = self.port(user)
 
         if not ip:
             ip = self.pc.common_ip
@@ -75,20 +75,20 @@ class RedisManager(object):
             self.client.ltrim(key, 0, 0)
 
         # Assign a port offset to every user.
-        self.port_offset(user)
+        self.port(user)
 
-    def port_offset(self, user):
+    def port(self, user):
 
-        offset =  self.client.hget('ipy:port', user)
+        offset =  int(self.client.hget('ipy:port', user))
 
         if not offset:
             port = self.client.incr('ipy:port:last')
             self.client.hsetnx('ipy:port', user, port)
 
             # Weak protection against contention
-            offset =  self.client.hget('ipy:port', user)
+            offset =  int(self.client.hget('ipy:port', user))
 
-        return offset
+        return offset+self.pc.base_port
 
 
 class DockerManager(object):
@@ -197,9 +197,39 @@ class DockerManager(object):
         except APIError as e:
             print e
 
+class GitManager(object):
+    """Clone, push, pull and watch a user's git repo"""
 
-class Manager(object):
+    def __init__(self, config, user, username, password):
+        self.config = config
+        self.user = user
+        self.username = username # The Github username
+        self.password = password
 
+    @property
+    def user_dir(self):
+        import os
+        return os.path.join(self.config.user_dir, self.user)
+
+    def start(self, user):
+        """Clone or pull a repo"""
+        pass
+
+    def stop(self, user):
+        """Stop the observer and push the repo"""
+        pass
+
+
+    def watch(self):
+
+        pass
+
+
+
+
+
+class Director(object):
+    """The Director coordinates the operation of the maangers. """
     def __init__(self, docker, redis):
 
         self.docker = docker
@@ -209,10 +239,9 @@ class Manager(object):
 
         c = self.docker.create(user)
 
-        c.start(self.redis.port_offset(user))
+        c.start(self.redis.offset(user))
 
         self.redis.activate(user)
-
 
     def stop(self, user):
 
