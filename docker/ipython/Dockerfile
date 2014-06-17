@@ -55,6 +55,8 @@ RUN pip install matplotlib
 RUN pip install pandas
 RUN pip install jinja2
 RUN pip install ipython
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc'
+
 RUN python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"

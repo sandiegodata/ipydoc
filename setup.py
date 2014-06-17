@@ -28,6 +28,8 @@ package_data = {
 }
 
 requires = [
+    'docker-py',
+    'sh'
 ]
 
 classifiers = [
