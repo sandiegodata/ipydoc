@@ -25,29 +25,20 @@ class TestBase(unittest.TestCase):
 
     def test_basic(self):
         import ipydoc
-        from ipydoc.manager import DockerManager, RedisManager
+        from ipydoc.manager import DockerManager, RedisManager, Director
 
-        pc = ipydoc.ProxyConfig('ipy.clarinova.net', '192.168.1.30')
+        redis = RedisManager(ipydoc.ProxyConfig('ipython.sandiegodata.org', '192.168.1.30'),
+                             'hipache')
 
-        redis = RedisManager(pc, 'hipache')
+        docker = DockerManager(ipydoc.DockerClientRef('tcp://192.168.1.30:4243','1.9',10),'ipython')
 
-        cr = ipydoc.DockerClientRef('tcp://192.168.1.30:4243','1.9',10)
+        d = Director(docker, redis)
 
-        m = DockerManager(cr,'ipython')
+        user = 'ericbusboom'
 
-        user = 'binbat'
+        d.stop(user)
 
-        from IPython.lib import passwd
-
-        c = m.create(user, env={
-            'IPYTHON_COOKIE_SECRET' : '12345',
-            'IPYTHON_PASSWORD': passwd('foober')
-
-        })
-
-        c.start(redis.port(user))
-
-        redis.activate(user)
+        d.start(user, 'foobar')
 
 
     def test_redis(self):

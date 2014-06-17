@@ -79,16 +79,16 @@ class RedisManager(object):
 
     def port(self, user):
 
-        offset =  int(self.client.hget('ipy:port', user))
+        offset =  self.client.hget('ipy:port', user)
 
         if not offset:
             port = self.client.incr('ipy:port:last')
             self.client.hsetnx('ipy:port', user, port)
 
             # Weak protection against contention
-            offset =  int(self.client.hget('ipy:port', user))
+            offset =  self.client.hget('ipy:port', user)
 
-        return offset+self.pc.base_port
+        return int(offset)+self.pc.base_port
 
 
 class DockerManager(object):
@@ -235,18 +235,25 @@ class Director(object):
         self.docker = docker
         self.redis = redis
 
-    def start(self, user):
+    def start(self, user, password):
+        from IPython.lib import passwd
 
-        c = self.docker.create(user)
+        c = self.docker.create(user, env={
+            'IPYTHON_COOKIE_SECRET': passwd(password),
+            'IPYTHON_PASSWORD': passwd(password)}
+        )
 
-        c.start(self.redis.offset(user))
+        c.start(self.redis.port(user))
 
         self.redis.activate(user)
+
 
     def stop(self, user):
 
         self.redis.stub(user)
-
-        self.docker.kill(user)
+        try:
+            self.docker.kill(user)
+        except APIError:
+            pass
 
 
