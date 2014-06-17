@@ -36,9 +36,12 @@ class TestBase(unittest.TestCase):
 
         user = 'ericbusboom'
 
-        d.stop(user)
+        #d.stop(user)
 
-        d.start(user, 'foobar')
+        password = d.start(user)
+
+        print 'Password', password
+
 
 
     def test_redis(self):
@@ -64,7 +67,7 @@ class TestBase(unittest.TestCase):
         directory = '/tmp/gittest'
         repo_url = 'https://github.com/sdrdl/SDRDL-Internship-Notebooks.git'
 
-        #rm_rf(directory)
+        rm_rf(directory)
 
         css = GitShellService(directory)
 
@@ -150,3 +153,4 @@ class TestBase(unittest.TestCase):
         except KeyboardInterrupt:
             observer.stop()
         observer.join()
+
