@@ -8,12 +8,12 @@ from IPython.utils.traitlets import  Unicode
 class GitNotebookManager(FileNotebookManager):
 
 
-    repo_url = Unicode('foobar', config=True)
-    username = Unicode('username', config=True)
-    password = Unicode('password', config=True)
+    repo_url = Unicode('', config=True)
+    username = Unicode('', config=True)
+    password = Unicode('', config=True)
 
     def __init__(self, **kwargs):
-        from sh import ErrorReturnCode_1, ErrorReturnCode_128
+        from sh import ErrorReturnCode_128
 
         r =  super(GitNotebookManager, self).__init__( **kwargs)
 

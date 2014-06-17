@@ -55,7 +55,6 @@ RUN pip install matplotlib
 RUN pip install pandas
 RUN pip install jinja2
 RUN pip install ipython
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc'
 
 RUN python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 
@@ -68,7 +67,8 @@ VOLUME /notebooks
 RUN ipython profile create default
 COPY ipython_notebook_config.py /.ipython/profile_default/ipython_notebook_config.py
 
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #foobar
+
 EXPOSE 8888
 
-CMD ipython notebook  --ip=* --MappingKernelManager.time_to_dead=10 --MappingKernelManager.first_beat=3 \
-    --notebook-dir=/notebooks  --NotebookApp.trust_xheaders=True
+CMD ipython notebook  --ip=* --notebook-dir=/notebooks
