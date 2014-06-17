@@ -95,8 +95,7 @@ class DockerManager(object):
     
     client = None
     container_prefix = 'ipy_'
-    kill = False
-    
+
     def __init__(self, client_ref, image):
     
         self.image = image
@@ -147,13 +146,13 @@ class DockerManager(object):
     def create(self, user, env={}):
         '''Ensure that a container for the user exists'''
         container_name = self._user_to_c_name(user)
-    
-        if self.kill:
-            self.kill(user)
 
-        cont = self.client.create_container(self.image, detach=True, name = container_name,
-                                  ports = [8888], environment=env, volumes = ['/notebooks'])
-
+        try:
+            cont = self.client.create_container(self.image, detach=True, name = container_name,
+                                      ports = [8888], environment=env, volumes = ['/notebooks'])
+        except APIError:
+            insp = self.client.inspect_container(container_name)
+            cont = insp['ID']
 
         return Container(self,user, cont)
     
@@ -172,7 +171,7 @@ class DockerManager(object):
      
             if insp['State']['Running']:
                 self.logger.debug('Container {} is running'.format(container_name))
-            
+
             else:
                 self.logger.debug('Starting {}'.format(container_name))
             
@@ -196,6 +195,8 @@ class DockerManager(object):
             
         except APIError as e:
             print e
+
+        return insp['Config']['Env']
 
 class GitManager(object):
     """Clone, push, pull and watch a user's git repo"""
@@ -235,17 +236,29 @@ class Director(object):
         self.docker = docker
         self.redis = redis
 
-    def start(self, user, password):
+    def start(self, user, repo_url=None, github_auth=None):
         from IPython.lib import passwd
+        from random import choice
+        import string
+
+        password = ''.join([choice(string.letters + string.digits) for i in range(12)])
 
         c = self.docker.create(user, env={
             'IPYTHON_COOKIE_SECRET': passwd(password),
-            'IPYTHON_PASSWORD': passwd(password)}
-        )
+            'IPYTHON_PASSWORD': passwd(password),
+            'IPYTHON_CLEAR_PASSWORD': password,
+            'IPYTHON_REPO_URL': repo_url,
+            'IPYTHON_REPO_AUTH': github_auth
+        })
 
-        c.start(self.redis.port(user))
+        env = c.start(self.redis.port(user))
 
         self.redis.activate(user)
+
+        for e in env:
+            k,v = e.split('=',1)
+            if k == 'IPYTHON_CLEAR_PASSWORD':
+                return v
 
 
     def stop(self, user):
