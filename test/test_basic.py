@@ -38,7 +38,10 @@ class TestBase(unittest.TestCase):
 
         #d.stop(user)
 
-        password = d.start(user)
+        repo = 'https://github.com/SDRDLAnalysts/testing.git'
+        auth = 'a50fd9805127e87b0f6099bf75e480128180e795'
+
+        password = d.start(user, repo, auth)
 
         print 'Password', password
 
