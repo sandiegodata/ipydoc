@@ -18,8 +18,9 @@ class DockerServer(object):
         self.logger = logger
 
 
-    def hello(self, name):
-        return "Hello, %s" % name
+    def version(self):
+        import ipydoc
+        return ipydoc.__version__
 
     def start(self, user, repo_url=None, github_auth=None):
         self.logger.info("Starting {}".format(user))
