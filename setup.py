@@ -36,7 +36,8 @@ requires = [
     'docker-py',
     'sh',
     'zerorpc',
-    'redis'
+    'redis',
+    'ipython'
 ]
 
 classifiers = [

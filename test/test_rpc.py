@@ -28,7 +28,10 @@ class TestBase(unittest.TestCase):
         import zerorpc
 
         c = zerorpc.Client()
-        c.connect("tcp://127.0.0.1:4242")
+
+        cn = "tcp://barker:49153"
+
+        c.connect(cn)
         print c.hello("RPC")
 
         user = 'ericbusboom'
