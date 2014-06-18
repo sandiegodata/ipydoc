@@ -25,7 +25,9 @@ packages = [
     'ipydoc.ipython'
 ]
 
-scripts=['scripts/ipydoc_director'],
+scripts=[
+    'scripts/ipydoc_director'
+]
 
 package_data = {
 }

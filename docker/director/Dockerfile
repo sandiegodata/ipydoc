@@ -19,11 +19,11 @@ RUN dpkg-reconfigure locales
 RUN apt-get install -y build-essential make gcc wget curl git
 RUN apt-get install -y python python-pip python-dev
 
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kick3
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kick4
 
 EXPOSE 4242
 
-CMD ["-d", "-P ipython.sandiegodata.org" "-R hipache"]
+#CMD ["-d", "-P ipython.sandiegodata.org" "-R hipache"]
 
-ENTRYPOINT ["ipydoc_director"]
+#ENTRYPOINT ["ipydoc_director"]
 
