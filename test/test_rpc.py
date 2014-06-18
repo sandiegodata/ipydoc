@@ -29,7 +29,8 @@ class TestBase(unittest.TestCase):
 
         c = zerorpc.Client()
 
-        cn = "tcp://barker:49153"
+        #cn = "tcp://barker:49153"
+        cn = "tcp://localhost:4242"
 
         c.connect(cn)
         print c.hello("RPC")
@@ -40,4 +41,6 @@ class TestBase(unittest.TestCase):
         auth = 'a50fd9805127e87b0f6099bf75e480128180e795'
 
         c.stop(user)
-        c.start(user, repo, auth)
+        password = c.start(user, repo, auth)
+
+        print password

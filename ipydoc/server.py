@@ -32,9 +32,13 @@ class DockerServer(object):
 
 if __name__ == '__main__':
     import os
+    import urlparse
 
     docker_connect =  os.getenv('DOCKER_HOST', 'tcp://0.0.0.0:4243')
 
+    parts = urlparse.urlparse(docker_connect)
+
+    backend_host = parts.netloc.split(':')[0]
 
     parser = argparse.ArgumentParser(description='Serve requests to start ipython containers',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -45,6 +49,7 @@ if __name__ == '__main__':
     parser.add_argument('-D', '--docker', default= docker_connect,type=str, help='Connection URL to the docker host')
 
     parser.add_argument('-P', '--proxy-domain', type=str, required=True, help='Base domain for the proxy')
+    parser.add_argument('-b', '--backend-host', type=str, default=backend_host, help='Host address of the ipython containers, usually the docker host')
     parser.add_argument('-I', '--image', type=str, default='ipython', help='Name of docker images for ipython container')
 
     parser.add_argument('-R', '--redis', type=str, required=True, help='Redis host')
@@ -57,7 +62,7 @@ if __name__ == '__main__':
         logging.basicConfig()
         logger.setLevel(logging.DEBUG)
 
-    redis_ = RedisManager(ProxyConfig(args.proxy_domain, args.docker), args.redis)
+    redis_ = RedisManager(ProxyConfig(args.proxy_domain, args.backend_host), args.redis)
 
     docker = DockerManager(DockerClientRef(args.docker,'1.9', 10), args.image)
 
