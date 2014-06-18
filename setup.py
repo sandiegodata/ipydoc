@@ -25,13 +25,16 @@ packages = [
     'ipydoc.ipython'
 ]
 
+scripts=['scripts/ipydoc_director'],
+
 package_data = {
 }
 
 requires = [
     'docker-py',
     'sh',
-    'zerorpc'
+    'zerorpc',
+    'redis'
 ]
 
 classifiers = [
@@ -53,6 +56,7 @@ setup(
     long_description=readme,
     packages=packages,
     package_data=package_data,
+    scripts=scripts,
     install_requires=requires,
     author=ipydoc.__author__,
     author_email='eric@sandiegodata.org',
