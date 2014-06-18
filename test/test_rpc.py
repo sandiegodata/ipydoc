@@ -29,11 +29,11 @@ class TestBase(unittest.TestCase):
 
         c = zerorpc.Client()
 
-        cn = "tcp://barker:49153"
-        #cn = "tcp://localhost:4242"
+        #cn = "tcp://barker:49153"
+        cn = "tcp://localhost:4242"
 
         c.connect(cn)
-        print c.version
+        print c.version()
 
         user = 'ericbusboom'
 
