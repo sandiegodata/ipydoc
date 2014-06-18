@@ -1,0 +1,32 @@
+database:
+    default:
+        dbname: '{root}/library.db'
+        driver: sqlite
+filesystem:
+    analysis: '{root}/source/analysis'
+    default:
+        dir: '{root}/library'
+        upstream:
+            dir: /cache
+    downloads: '{root}/cache/downloads'
+    extracts: '{root}/cache/extracts'
+    notebooks: '{root}/notebooks'
+    python: '{root}/cache/python'
+    root: /ambry
+    source: '{root}/source'
+library:
+    default:
+        database: default
+        filesystem: default
+        remotes:
+        - http://s3.sandiegodata.org/library#compress
+        source: '{root}/source'
+    server:
+        database: default
+        filesystem: default
+        host: localhost
+        port: 7979
+numbers:
+    host: numbers.ambry.io
+    key: fe78d179-8e61-4cc5-ba7b-263d8d3602b9
+    port: 80

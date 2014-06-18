@@ -4,7 +4,8 @@ ipython-docker
 Dockerfiles and scripts for running ipython 
 
 
-
+Building the Containers
+-----------------------
 
 Build the iptyhon image
 
@@ -17,3 +18,6 @@ Build the ambry image
 Runing an Ambry container
 
   docker run -d -p 8567:8888 -v  /proj/notebooks/user1:/notebooks ambry
+
+
+

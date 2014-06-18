@@ -30,7 +30,8 @@ package_data = {
 
 requires = [
     'docker-py',
-    'sh'
+    'sh',
+    'zerorpc'
 ]
 
 classifiers = [

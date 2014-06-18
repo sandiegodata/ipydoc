@@ -31,6 +31,7 @@ class RedisManager(object):
 
     def __init__(self, proxy_config, host='localhost', port = 6379, db = 0):
         import redis
+
         self.client = redis.StrictRedis(host=host , port=port, db=db)
         self.pc = proxy_config
 
@@ -177,12 +178,7 @@ class DockerManager(object):
             
                 external = '/proj/notebooks/{}/'.format(user)
                 internal = '/notebooks'
-            
-                binds = { external :{
-                            'bind': internal, 
-                            'ro': False
-                            } 
-                        }
+
                     
                 binds = {
                     external: internal

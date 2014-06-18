@@ -18,7 +18,7 @@
 # 
 # VERSION               0.0.1
 
-FROM ubuntu:13.04
+FROM ubuntu:14.04
 
 MAINTAINER Eric Busboom "eric@clarinova.com"
 
@@ -58,17 +58,20 @@ RUN pip install ipython
 
 RUN python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"
-
-VOLUME /notebooks
-
 # Create the default profile structure and replace the config file with a symlink to the one in the users folder.
 # This way, each user can have his own config and the password can be set individually.
 RUN ipython profile create default
 COPY ipython_notebook_config.py /.ipython/profile_default/ipython_notebook_config.py
 
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #foobar
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #foobar2
 
 EXPOSE 8888
 
-CMD ipython notebook  --ip=* --notebook-dir=/notebooks
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"
+RUN ambry config install -f
+RUN ambry library sync #kick2
+
+# Do this after so the synced bundle databases are in the main libary, not in the cache.
+COPY ambry.yaml /etc/ambry.yaml
+
+CMD ipython notebook  --ip=* --notebook-dir=/ambry/notebooks
