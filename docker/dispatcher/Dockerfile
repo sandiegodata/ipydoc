@@ -21,6 +21,8 @@ RUN apt-get install -y  python python-dev python-pip
 
 RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kicker77
 
+RUN ipydoc_manage syncdb  --noinput
+
 EXPOSE 8000
 
 #ENTRYPOINT ["ipydoc_dispatch"]

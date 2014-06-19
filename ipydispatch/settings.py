@@ -162,8 +162,3 @@ GITHUB_API_SECRET = '2d5ee034234a079d810604491261f610b00e3487'
 
 GITHUB_EXTENDED_PERMISSIONS = ['public_repo', 'gist', 'read:org']
 
-
-DIRECTOR_PORT = os.getenv('DIRECTOR_PORT')
-
-if not DIRECTOR_PORT:
-    raise Exception("Must define DIRECTOR_PORT env var")
