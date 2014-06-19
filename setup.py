@@ -45,7 +45,8 @@ requires = [
     'ipython',
     'django',
     'django-social-auth',
-    'cherrypy'
+    'cherrypy',
+    'pygithub'
 ]
 
 classifiers = [
