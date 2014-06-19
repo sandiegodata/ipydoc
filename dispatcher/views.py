@@ -80,6 +80,8 @@ def done(request,  *args, **kwargs):
         'host': '{}}://{}.{}'.format(scheme, django_user.username, base_domain)
     }
 
+    logger.info(ctx)
+
     return render_to_response('done.html', ctx, RequestContext(request))
 
 
