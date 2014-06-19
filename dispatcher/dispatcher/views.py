@@ -3,10 +3,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect
-from django.contrib.messages.api import get_messages
+from django.shortcuts import render_to_response
 
-from social_auth import __version__ as version
 
 # Create your views here.
 
@@ -15,23 +13,23 @@ base_domain = 'ipython.sandiegodata.org'
 
 def home(request):
     """Home view, displays login mechanism"""
-    if request.user.is_authenticated():
-        return HttpResponseRedirect('done')
-    else:
-        return HttpResponseRedirect('/login/github/')
+
+    return render_to_response('home.html')
+
 
 @login_required
 def done(request,  *args, **kwargs):
     """Login complete view, displays user data"""
     import logging
-
     import github  #pygithub
+    import zerorpc
+    import os
     from social_auth.models import UserSocialAuth
     from django.contrib.auth.models import User
-    import ipydoc
-    from ipydoc.manager import DockerManager, RedisManager, Director
+
 
     logger = logging.getLogger('views')
+    logger.setLevel(logging.DEBUG)
 
     # The UID comes from the social_auth plugin; its the DJango user id.
     uid = request.session.get('_auth_user_id')
@@ -65,16 +63,11 @@ def done(request,  *args, **kwargs):
         repo = org.create_repo(django_user.username, auto_init=True )
         repo_url = repo.clone_url
 
-    # Now we can startup the container for the user.
-    redis = RedisManager(ipydoc.ProxyConfig('ipython.sandiegodata.org', '192.168.1.30'),
-                         'hipache')
+    # Call the director service to create the container
+    c = zerorpc.Client()
 
-    docker = DockerManager(ipydoc.DockerClientRef('tcp://192.168.1.30:4243', '1.9', 10), 'ipython')
-
-    d = Director(docker, redis)
-
-
-    password = d.start(django_user.username, repo_url, auth)
+    c.connect(os.getenv('DIRECTOR_PORT'))
+    password = c.start(django_user.username, repo_url, auth)
 
     logger.info(django_user.username + " " + password)
 

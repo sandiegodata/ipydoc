@@ -43,7 +43,7 @@ requires = [
     'redis',
     'ipython',
     'django',
-    'python-social-auth'
+    'django-social-auth'
 ]
 
 classifiers = [

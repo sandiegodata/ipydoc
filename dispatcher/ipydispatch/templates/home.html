@@ -12,10 +12,12 @@
 {% block content %}
 
 <div>
-  <h3>Login using other authentication systems:</h3>
-  	<ul>
-      <li><a rel="nofollow" href="{% url 'socialauth_begin' 'github' %}">GitHub</a></li>
-	</ul>
+  <h1>Login using Github:</h1>
+  <a rel="nofollow" href="{% url 'socialauth_begin' 'github' %}">GitHub</a></li>
+</div>
+<div>
+   <h1>Logout</h1>
+  <a  rel="nofollow" class="logout" href="/logout/">Logout</a>
 </div>
 
 
