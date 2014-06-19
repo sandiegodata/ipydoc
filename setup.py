@@ -24,8 +24,7 @@ packages = [
     'ipydoc',
     'ipydoc.ipython',
     'dispatcher',
-    'dispatcher.dispatcher',
-    'dispatcher.ipydispatch'
+    'ipydispatch'
 ]
 
 scripts=[
@@ -43,7 +42,8 @@ requires = [
     'redis',
     'ipython',
     'django',
-    'django-social-auth'
+    'django-social-auth',
+    'cherrypy'
 ]
 
 classifiers = [

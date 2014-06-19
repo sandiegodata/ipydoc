@@ -19,7 +19,7 @@ RUN dpkg-reconfigure locales
 RUN apt-get install -y build-essential make gcc wget curl git
 RUN apt-get install -y  python python-dev python-pip
 
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kicker2
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kicker3
 
 
 EXPOSE 8000

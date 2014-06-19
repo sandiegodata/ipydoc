@@ -5,4 +5,4 @@
 # Copyright (c) 2014 Clarinova. This file is licensed under the terms of the
 # Revised BSD License, included in this distribution as LICENSE.txt
 
-python -mdispatcher.runserver $@
+exec python -mdispatcher.runserver $@
