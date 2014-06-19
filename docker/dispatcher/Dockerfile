@@ -25,4 +25,4 @@ RUN ipydoc_manage syncdb  --noinput
 
 EXPOSE 8000
 
-ENTRYPOINT ["ipydoc_dispatch"]
+CMD ["ipydoc_dispatch"]

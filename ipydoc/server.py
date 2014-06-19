@@ -33,6 +33,11 @@ class DockerServer(object):
         self.logger.info("Stopping {}".format(user))
         return self.director.stop(user)
 
+    def start_dispatcher(self, host_id):
+        """Set the proxy to point to the dispatcher"""
+
+        return self.director.activate_dispatcher(host_id)
+
     def logout(self, environ):
         """On logout, the IPython process on the container passes to us the whole environment"""
         self.logger.info("Logging out ")

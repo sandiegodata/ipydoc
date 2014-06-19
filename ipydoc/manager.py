@@ -35,12 +35,19 @@ class RedisManager(object):
         self.client = redis.StrictRedis(host=host , port=port, db=db)
         self.pc = proxy_config
 
-    def _make_key(self, name):
-        return 'frontend:{}.{}'.format(name,self.pc.base_domain)
+    def _make_key(self, name=None):
+
+        if name:
+            return 'frontend:{}.{}'.format(name,self.pc.base_domain)
+        else:
+            return 'frontend:{}'.format(self.pc.base_domain)
 
 
+    def _make_name(self, name=None):
 
-    def _make_name(self, name):
+        if not name:
+            name = '_director' # For the
+
         return '{}{}'.format(self.pc.name_prefix, name)
 
     def stub(self,user):
@@ -61,7 +68,7 @@ class RedisManager(object):
 
         self.client.rpush(self._make_key(user), backend)
 
-    def ensure_frontend_only(self, user):
+    def ensure_frontend_only(self, user=None):
         """Ensure that only the first item is in the list, the one that has the
         name of the frontend. """
         key = self._make_key(user)
@@ -76,10 +83,19 @@ class RedisManager(object):
             self.client.ltrim(key, 0, 0)
 
         # Assign a port offset to every user.
-        self.port(user)
+        if user:
+            self.port(user)
+
+    def activate_dispatcher(self, url):
+        """Setup the front and backends for the dispatcher"""
+
+        self.ensure_frontend_only()
+
+        self.client.rpush(self._make_key(), url)
+
 
     def port(self, user):
-
+        '''Get the host port assigned to the user'''
         offset =  self.client.hget('ipy:port', user)
 
         if not offset:
@@ -194,6 +210,31 @@ class DockerManager(object):
 
         return insp['Config']['Env']
 
+    def ports(self, host_id):
+        insp = self.client.inspect_container(host_id)
+
+        import pprint
+        import urlparse
+        import collections
+        Ports = collections.namedtuple("Ports", ["c_port", "h_address", "h_port"], verbose=False, rename=False)
+
+        ports = []
+
+        ext_host_ip = urlparse.urlparse(self.client_ref.url)[1].split(':', 1)[0]
+
+        pprint.pprint(insp['NetworkSettings']['Ports'])
+
+        for port, host_addresses in insp['NetworkSettings']['Ports'].items():
+
+            for host_address in host_addresses:
+                ports.append(Ports(port,
+                             host_address['HostIp'] if host_address['HostIp']  != '0.0.0.0' else ext_host_ip,
+                             host_address['HostPort']))
+
+        return  ports
+
+
+
 class GitManager(object):
     """Clone, push, pull and watch a user's git repo"""
 
@@ -266,3 +307,10 @@ class Director(object):
             pass
 
 
+    def activate_dispatcher(self, host_id):
+
+        port =  self.docker.ports(host_id)[0]
+
+        url = 'http://{}:{}'.format(port.h_address, port.h_port)
+
+        self.redis.activate_dispatcher(url)

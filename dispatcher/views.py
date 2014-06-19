@@ -24,6 +24,7 @@ def done(request,  *args, **kwargs):
     import github  #pygithub
     import zerorpc
     import os
+    import urlparse
     from social_auth.models import UserSocialAuth
     from django.contrib.auth.models import User
 
@@ -71,10 +72,12 @@ def done(request,  *args, **kwargs):
 
     logger.info(django_user.username + " " + password)
 
+    scheme = urlparse.urlparse(os.getenv('HTTP_REFERER'))[0]
+
     ctx = {
         'password': password,
         'username': django_user.username,
-        'host': 'http://{}.{}'.format(django_user.username, base_domain)
+        'host': '{}}://{}.{}'.format(scheme, django_user.username, base_domain)
     }
 
     return render_to_response('done.html', ctx, RequestContext(request))

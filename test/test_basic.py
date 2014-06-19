@@ -46,6 +46,22 @@ class TestBase(unittest.TestCase):
         print 'Password', password
 
 
+    def test_dispatcher(self):
+        import ipydoc
+        from ipydoc.manager import DockerManager, RedisManager, Director
+
+        redis = RedisManager(ipydoc.ProxyConfig('ipython.sandiegodata.org', '192.168.1.30'),
+                             'hipache')
+
+        docker = DockerManager(ipydoc.DockerClientRef('tcp://192.168.1.30:4243', '1.9', 10), 'ipython')
+
+        d = Director(docker, redis)
+
+
+        d.activate_dispatcher('8241b478dd62')
+
+
+
 
     def test_redis(self):
         import ipydoc

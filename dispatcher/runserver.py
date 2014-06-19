@@ -1,9 +1,13 @@
 from cherrypy import wsgiserver
 import os
-from os.path import dirname, join
-import django.core.handlers.wsgi
 
-import sys
+import django.core.handlers.wsgi
+import zerorpc
+
+c = zerorpc.Client()
+
+c.connect(os.getenv('DIRECTOR_PORT'))
+password = c.activate_dispatcher(os.getenv('HOSTNAME'))
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ipydispatch.settings")
