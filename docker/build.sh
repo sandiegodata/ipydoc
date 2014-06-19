@@ -6,3 +6,5 @@ docker build -t ipynb_director director
 
 docker build -t ipynb_ipython ipython
 
+docker build -t ipynb_dispatcher dispatcher
+

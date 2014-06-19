@@ -24,7 +24,8 @@ packages = [
     'ipydoc',
     'ipydoc.ipython',
     'dispatcher',
-    'ipydispatch'
+    'ipydispatch',
+    'ipydispatch.templates'
 ]
 
 scripts=[
@@ -32,8 +33,7 @@ scripts=[
     'scripts/ipydoc_dispatch'
 ]
 
-package_data = {
-}
+package_data = {"": ['*.html', '*.css', '*.rst']}
 
 requires = [
     'docker-py',
@@ -64,7 +64,7 @@ setup(
     description='Contol interface for ipython notebook servers in docker',
     long_description=readme,
     packages=packages,
-    include_package_data=True, #package_data=package_data,
+    package_data=package_data,
     scripts=scripts,
     install_requires=requires,
     author=ipydoc.__author__,
