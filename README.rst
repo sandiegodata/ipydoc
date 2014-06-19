@@ -15,4 +15,4 @@ Running the containers
 
     $ docker run -d -t -i  -P --name ipynb_director ipynb_director  -I ipynb_ipython -P ipython.sandiegodata.org -R hipache  -D "tcp://barker:4243"
 
-    $ docker run --rm -t -i  -P --link ipynb_director:director --name ipynb_dispatcher ipynb_dispatcher /bin/bash
+    $ docker run -d -t -i  -P --link ipynb_director:director --name ipynb_dispatcher ipynb_dispatcher
