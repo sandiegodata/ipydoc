@@ -41,7 +41,8 @@ requires = [
     'sh',
     'zerorpc',
     'redis',
-    'ipython'
+    'ipython',
+    'django'
 ]
 
 classifiers = [
