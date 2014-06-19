@@ -19,14 +19,17 @@ class DockerServer(object):
 
 
     def version(self):
+        """Return the version number"""
         import ipydoc
         return ipydoc.__version__
 
     def start(self, user, repo_url=None, github_auth=None):
+        """Start an ipython container for a given user"""
         self.logger.info("Starting {}".format(user))
         return self.director.start(user, repo_url=repo_url, github_auth=github_auth)
 
     def stop(self, user):
+        """Stop a user's Ipython container"""
         self.logger.info("Stopping {}".format(user))
         return self.director.stop(user)
 
@@ -35,6 +38,8 @@ class DockerServer(object):
         self.logger.info("Logging out ")
 
         self.logger.info(environ)
+
+        return True
 
 
 

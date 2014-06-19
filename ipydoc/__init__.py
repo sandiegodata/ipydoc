@@ -4,7 +4,7 @@ Copyright (c) 2014 San Diego Regional Data Library. This file is licensed under 
 Revised BSD License, included in this distribution as LICENSE.txt
 """
 
-__version__ = 0.02
+__version__ = 0.03
 __author__ = 'eric@sandiegodata.org'
 
 
