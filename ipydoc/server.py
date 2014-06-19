@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-P', '--proxy-domain', type=str, required=True, help='Base domain for the proxy')
     parser.add_argument('-b', '--backend-host', type=str, help='Host address of the ipython containers, usually the docker host')
-    parser.add_argument('-I', '--image', type=str, default='ipython', help='Name of docker images for ipython container')
+    parser.add_argument('-I', '--image', type=str, default='ipynb_ipython', help='Name of docker images for ipython container')
 
     parser.add_argument('-R', '--redis', type=str, required=True, help='Redis host')
 

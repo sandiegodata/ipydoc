@@ -1,7 +1,7 @@
-#
-# VERSION               0.0.1
+# Run the Django application ro login in users with Github and
+# redirect to the ipython container
 
-FROM ubuntu:14.04
+FROM ubuntu:13.04
 
 MAINTAINER Eric Busboom "eric@clarinova.com"
 
@@ -17,13 +17,11 @@ RUN locale-gen en_US.UTF-8
 RUN dpkg-reconfigure locales
 
 RUN apt-get install -y build-essential make gcc wget curl git
-RUN apt-get install -y python python-pip python-dev
+RUN apt-get install -y  python python-dev python-pip
 
 RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc'
 
-EXPOSE 4242
 
-ENTRYPOINT ["ipydoc_director"]
+EXPOSE 8000
 
-
-
+ENTRYPOINT ["ipydoc_dispatch"]

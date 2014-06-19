@@ -1,0 +1,8 @@
+#!/bin/sh
+# Run the ipydispatch dkango application.
+# This uses the built-in development server, but we're cheap
+#
+# Copyright (c) 2014 Clarinova. This file is licensed under the terms of the
+# Revised BSD License, included in this distribution as LICENSE.txt
+
+python -mdispatcher.runserver $@

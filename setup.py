@@ -22,11 +22,15 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
 
 packages = [
     'ipydoc',
-    'ipydoc.ipython'
+    'ipydoc.ipython',
+    'dispatcher',
+    'dispatcher.dispatcher',
+    'dispatcher.ipydispatch'
 ]
 
 scripts=[
-    'scripts/ipydoc_director'
+    'scripts/ipydoc_director',
+    'scripts/ipydoc_dispatch'
 ]
 
 package_data = {
@@ -58,7 +62,7 @@ setup(
     description='Contol interface for ipython notebook servers in docker',
     long_description=readme,
     packages=packages,
-    package_data=package_data,
+    include_package_data=True, #package_data=package_data,
     scripts=scripts,
     install_requires=requires,
     author=ipydoc.__author__,

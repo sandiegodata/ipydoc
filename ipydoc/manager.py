@@ -95,7 +95,7 @@ class RedisManager(object):
 class DockerManager(object):
     
     client = None
-    container_prefix = 'ipy_'
+    container_prefix = 'ipynb_'
 
     def __init__(self, client_ref, image):
     

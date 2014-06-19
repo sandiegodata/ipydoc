@@ -6,19 +6,9 @@
 # Based on crosbymichael/ipython
 # Creates a Docker image with IPython Notebook installed.
 #
-# It expects to be run like this: 
-#
-# docker run -v /home/eduard/notebooks/eduard:/notebooks benthoo/ipython-user
-#
-# You provide a folder per user on the host system. This folder will hold the users notebooks and also needs to contain the
-# ipython config file (ipython_notebook_config.py). There you can configure a password, which should be unique for each user.
-#
-# This way, you can run an instance of IPython per user, while each user has separate storage on the host machine and an
-# individual password.
-# 
 # VERSION               0.0.1
 
-FROM ubuntu:14.04
+FROM ubuntu:13.04
 
 MAINTAINER Eric Busboom "eric@clarinova.com"
 
@@ -49,6 +39,9 @@ RUN apt-get install -y python-imaging libpng-dev
 RUN apt-get install -y libzmq-dev
 RUN apt-get install -y curl
 
+# Needed to build matplotlib on ubuntu 14.04
+RUN ln -s /usr/include/freetype2 /usr/include/freetype2/freetype
+
 RUN pip install pyzmq
 RUN pip install numpy
 RUN pip install matplotlib
@@ -74,4 +67,4 @@ RUN ambry library sync #kick2
 # Do this after so the synced bundle databases are in the main libary, not in the cache.
 COPY ambry.yaml /etc/ambry.yaml
 
-CMD ipython notebook  --ip=* --notebook-dir=/ambry/notebooks
+CMD ipython notebook  --ip=* --notebook-dir=/notebooks
