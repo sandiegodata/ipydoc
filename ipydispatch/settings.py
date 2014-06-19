@@ -143,7 +143,7 @@ LOGGING = {
 ## Social Auth 
 LOGIN_REDIRECT_URL = '/done'
 
-
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 SOCIAL_AUTH_PIPELINE = (
     'social_auth.backends.pipeline.social.social_auth_user',
