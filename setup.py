@@ -42,7 +42,8 @@ requires = [
     'zerorpc',
     'redis',
     'ipython',
-    'django'
+    'django',
+    'social_auth'
 ]
 
 classifiers = [
