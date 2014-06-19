@@ -77,7 +77,7 @@ def done(request,  *args, **kwargs):
     ctx = {
         'password': password,
         'username': django_user.username,
-        'host': '{}}://{}.{}'.format(scheme, django_user.username, base_domain)
+        'host': '{}://{}.{}'.format(scheme, django_user.username, base_domain)
     }
 
     logger.info(ctx)
