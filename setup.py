@@ -30,7 +30,9 @@ packages = [
 
 scripts=[
     'scripts/ipydoc_director',
-    'scripts/ipydoc_dispatch'
+    'scripts/ipydoc_dispatch',
+    'scripts/ipydoc_manage'
+
 ]
 
 package_data = {"": ['*.html', '*.css', '*.rst']}
