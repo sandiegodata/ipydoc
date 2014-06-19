@@ -30,6 +30,13 @@ class DockerServer(object):
         self.logger.info("Stopping {}".format(user))
         return self.director.stop(user)
 
+    def logout(self, environ):
+        """On logout, the IPython process on the container passes to us the whole environment"""
+        self.logger.info("Logging out ")
+
+        self.logger.info(environ)
+
+
 
 if __name__ == '__main__':
     import os

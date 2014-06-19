@@ -19,3 +19,40 @@ c.NotebookApp.trust_xheaders=True
 
 c.MappingKernelManager.time_to_dead=10
 c.MappingKernelManager.first_beat=3
+
+##
+## Monkey Patch the logout handler to shutdown the container
+##
+from IPython.html.base.handlers import IPythonHandler
+
+class LogoutHandler(IPythonHandler):
+
+    def send_logout_message(self):
+        # Call the director service to create the container
+
+        import os
+        import zerorpc
+
+        c = zerorpc.Client()
+
+        c.connect(os.getenv('DIRECTOR_PORT'))
+        password = c.logout(os.environ)
+
+    def get(self):
+
+
+        self.clear_login_cookie()
+        if self.login_available:
+            message = {'info': 'Successfully logged out.'}
+        else:
+            message = {'warning': 'Cannot log out.  Notebook authentication '
+                       'is disabled.'}
+
+        self.send_logout_message()
+
+        self.write(self.render_template('logout.html',
+                    message=message))
+
+import IPython.html.auth.logout as logout
+
+logout.default_handlers = [(r"/logout", LogoutHandler)]
