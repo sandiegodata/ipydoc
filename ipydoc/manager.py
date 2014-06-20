@@ -363,6 +363,9 @@ class Director(object):
 
         host_id = self.docker.get_host_for_user(name)
 
+        if not host_id:
+            host_id = name
+
         self.logout(host_id)
 
         try:
