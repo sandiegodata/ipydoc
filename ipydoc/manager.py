@@ -50,10 +50,12 @@ class RedisManager(object):
 
         return '{}{}'.format(self.pc.name_prefix, name)
 
-    def stub(self,user):
+    def stub(self,user, backend):
         """Point the proxy address to the stub"""
         """Point the proxy address to the stub"""
         self.ensure_frontend_only(user)
+
+        return self.set_backend(user, backend)
 
     def activate(self, user, ip=None):
 
@@ -145,23 +147,25 @@ class DockerManager(object):
 
         return self.client.inspect_container(self._user_to_c_name(user))
 
-    def kill(self,user):
-        container_name = self._user_to_c_name(user)
+    def kill(self,user=None, host_id=None):
+
+        if host_id is None:
+            host_id = self._user_to_c_name(user)
 
         try:
-            insp = self.client.inspect_container(container_name)
+            insp = self.client.inspect_container(host_id)
         except APIError:
             return False
 
         container_id = insp['ID']
 
         if insp['State']['Running']:
-            self.logger.debug("Killing {}".format(container_name))
+            self.logger.debug("Killing {}".format(host_id))
             self.client.kill(container_id)
 
         self.client.remove_container(container_id)
 
-        self.logger.debug("Removing {}".format(container_name))
+        self.logger.debug("Removing {}".format(host_id))
 
         return True
 
@@ -233,6 +237,7 @@ class DockerManager(object):
         except APIError as e:
             print e
 
+
         return insp['Config']['Env']
 
     def ports(self, host_id):
@@ -256,6 +261,17 @@ class DockerManager(object):
 
         return  ports
 
+
+    def get_user_for_host(self, host_id):
+
+        try:
+            insp = self.client.inspect_container(host_id)
+        except APIError:
+            return False
+
+        name = insp['Name'].replace(self.container_prefix, '').strip('/')
+
+        return name
 
 
 class GitManager(object):
@@ -318,15 +334,21 @@ class Director(object):
             if k == 'IPYTHON_CLEAR_PASSWORD':
                 return v
 
+    def stop(self, host_id):
 
-    def stop(self, user):
+        self.logout(host_id)
 
-        self.redis.set_backend(user, self.dispatcher_url)
         try:
-            self.docker.kill(user)
+            self.docker.kill(host_id=host_id)
         except APIError:
             pass
 
+    def logout(self, host_id):
+        """Move the proxy entry for the user back to the dispatcher"""
+
+        user = self.docker.get_user_for_host(host_id)
+
+        self.redis.stub(user, self.dispatcher_url)
 
     def activate_dispatcher(self, host_id):
 

@@ -38,11 +38,29 @@ class DockerServer(object):
         self.logger.info("Start dispatcher at {}".format(host_id))
         return self.director.activate_dispatcher(host_id)
 
-    def logout(self, environ):
+    def logout(self, host_id):
         """On logout, the IPython process on the container passes to us the whole environment"""
-        self.logger.info("Logging out ")
+        import threading
 
-        self.logger.info(environ)
+        self.logger.info("Logging out {}".format(host_id))
+
+        self.logger.info(host_id)
+
+        self.director.logout(host_id)
+
+        # Wait a few seconds to kill the container, so it can return a response to the
+        # user.
+        class WaitABit(threading.Thread):
+            def run(this):
+                import time
+                time.sleep(5)
+                self.logger.info("Killing {}".format(host_id))
+                self.director.stop(host_id)
+
+
+        t = WaitABit()
+        t.start()
+
 
         return True
 

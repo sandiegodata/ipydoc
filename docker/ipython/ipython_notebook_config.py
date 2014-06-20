@@ -36,7 +36,7 @@ class LogoutHandler(IPythonHandler):
         c = zerorpc.Client()
 
         c.connect(os.getenv('DIRECTOR_PORT'))
-        c.logout(os.environ)
+        c.logout(os.getenv('HOSTNAME'))
 
     def get(self):
 
