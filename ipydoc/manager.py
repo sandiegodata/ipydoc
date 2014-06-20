@@ -173,21 +173,14 @@ class DockerManager(object):
 
         try:
 
-            host_id = os.getenv('HOSTNAME', False)
 
-            if host_id:
-                links = {'director' : host_id}
-            else:
-                links = None
 
 
             cont = self.client.create_container(self.image,
                                                 detach=True,
                                                 name = container_name,
                                                 ports = [8888],
-                                                environment=env,
-                                                links = links,
-                                                volumes = ['/notebooks'])
+                                                environment=env)
         except APIError:
             insp = self.client.inspect_container(container_name)
             cont = insp['ID']
@@ -202,6 +195,8 @@ class DockerManager(object):
         #               memswap_limit=0)
     
     def start(self, user, port):
+        import os
+
         container_name = self._user_to_c_name(user)
 
         try:
@@ -221,7 +216,18 @@ class DockerManager(object):
                     external: internal
                 }
 
-                self.client.start(insp['ID'],  port_bindings={8888:port}, binds = binds )
+
+                host_id = os.getenv('HOSTNAME', False)
+
+                if host_id:
+                    links = { 'director': host_id }
+                else:
+                    links = None
+
+                volumes_from = os.getenv('VOLUMES_NAME', None)
+
+                self.client.start(insp['ID'],  port_bindings={8888:port}, binds = binds, links = links,
+                                  volumes_from = volumes_from )
                         #lxc_conf=None,
                         #publish_all_ports=False, links=None, privileged=False,
                         #dns=None, dns_search=None, volumes_from=None, network_mode=None)
