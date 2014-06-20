@@ -13,7 +13,6 @@ from IPython.utils.traitlets import  Unicode
 
 class GitNotebookManager(FileNotebookManager):
 
-
     repo_url = Unicode('', config=True)
     username = Unicode('', config=True)
     password = Unicode('', config=True)
@@ -30,11 +29,10 @@ class GitNotebookManager(FileNotebookManager):
 
         self.gss = GitShellService(self.notebook_dir, self.repo_url, username=self.username, password=self.password)
 
-        self.gss.set_ident(self.name, self.email)
-
         try:
             self.log.info("Cloning from {}".format(self.repo_url))
             self.gss.clone()
+            self.gss.set_ident(self.name, self.email)
         except ErrorReturnCode_128 as e:
             self.log.info("Failed to clone; assuming b/c dir {} not empty: {}".format(self.notebook_dir, e))
 
