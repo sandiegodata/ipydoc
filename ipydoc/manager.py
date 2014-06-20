@@ -254,6 +254,7 @@ class DockerManager(object):
     def is_running(self, id):
         '''Return true if the container is running, where id is either the host id or the username for the
         ipython container '''
+        import requests
 
         use_id = None
 
@@ -271,8 +272,30 @@ class DockerManager(object):
             except APIError as e:
                 return False
 
+        if not insp['State']['Running']:
+            return False
 
-        return insp['State']['Running']
+        # The container is running, so now we have to check for IPython to be running.
+        port = self.ports(insp['ID'])[0]
+
+        url = "http://{}:{}".format(port.h_address, int(port.h_port))
+
+        retries = 3
+        for i in range(retries):
+            try:
+                r = requests.get(url)
+                if r.status_code == 200:
+                    break
+            except requests.ConnectionError:
+                continue
+
+        if i == retries-1:
+            return False
+        else:
+            return True
+
+
+
 
     def ports(self, host_id):
         insp = self.client.inspect_container(host_id)
