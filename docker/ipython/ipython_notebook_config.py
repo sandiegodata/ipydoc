@@ -7,7 +7,7 @@ c = get_config()
 c.NotebookApp.cookie_secret =  os.getenv('IPYTHON_COOKIE_SECRET',  os.urandom(1024) )
 c.NotebookApp.password =  os.getenv('IPYTHON_PASSWORD')
 c.NotebookApp.notebook_manager_class = 'ipydoc.ipython.manager.GitNotebookManager'
-c.NotebookApp.notebook_dir = os.path.join('/notebooks',os.getenv('GITHUB_USER', 'unknown_user'))
+c.NotebookApp.notebook_dir = '/notebooks' # os.path.join('/notebooks',os.getenv('GITHUB_USER', 'unknown_user'))
 
 if not os.path.exists(c.NotebookApp.notebook_dir):
     os.makedirs(c.NotebookApp.notebook_dir)
