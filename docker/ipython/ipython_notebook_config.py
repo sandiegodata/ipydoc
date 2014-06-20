@@ -36,12 +36,12 @@ class LogoutHandler(IPythonHandler):
         c = zerorpc.Client()
 
         c.connect(os.getenv('DIRECTOR_PORT'))
-        password = c.logout(os.environ)
+        c.logout(os.environ)
 
     def get(self):
 
-
         self.clear_login_cookie()
+
         if self.login_available:
             message = {'info': 'Successfully logged out.'}
         else:

@@ -7,6 +7,23 @@ Dockerfiles and scripts for running ipython
 Building the Containers
 -----------------------
 
+Configuration
+-------------
+
+dispatcher
+++++++++++
+
+* DIRECTOR_PORT or --link ipynb_director:director
+
+director
+++++++++
+
+Run the director from the command line, and connect the dispatcher to it with an env var:
+
+    docker run --rm -t -i  -P  -e 'DIRECTOR_PORT=tcp://gala:4242' --name ipynb_dispatcher ipynb_dispatcher
+
+
+
 
 Running the containers
 ----------------------

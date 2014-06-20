@@ -167,11 +167,27 @@ class DockerManager(object):
 
     def create(self, user, env={}):
         '''Ensure that a container for the user exists'''
+        import os
+
         container_name = self._user_to_c_name(user)
 
         try:
-            cont = self.client.create_container(self.image, detach=True, name = container_name,
-                                      ports = [8888], environment=env, volumes = ['/notebooks'])
+
+            host_id = os.getenv('HOSTNAME', False)
+
+            if host_id:
+                links = {'director' : host_id}
+            else:
+                links = None
+
+
+            cont = self.client.create_container(self.image,
+                                                detach=True,
+                                                name = container_name,
+                                                ports = [8888],
+                                                environment=env,
+                                                links = links,
+                                                volumes = ['/notebooks'])
         except APIError:
             insp = self.client.inspect_container(container_name)
             cont = insp['ID']
@@ -227,8 +243,6 @@ class DockerManager(object):
 
         ext_host_ip = urlparse.urlparse(self.client_ref.url)[1].split(':', 1)[0]
 
-        pprint.pprint(insp['NetworkSettings']['Ports'])
-
         for port, host_addresses in insp['NetworkSettings']['Ports'].items():
 
             for host_address in host_addresses:
@@ -266,9 +280,6 @@ class GitManager(object):
     def watch(self):
 
         pass
-
-
-
 
 
 class Director(object):
