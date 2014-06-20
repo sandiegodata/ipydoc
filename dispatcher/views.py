@@ -64,11 +64,16 @@ def done(request,  *args, **kwargs):
         repo = org.create_repo(django_user.username, auto_init=True )
         repo_url = repo.clone_url
 
+    logger.info("!!!"+ user.extra_data)
+
+    email = 'bob@bob.com'
+    name = 'Nonnie Foobar'
+
     # Call the director service to create the container
     c = zerorpc.Client()
 
     c.connect(os.getenv('DIRECTOR_PORT'))
-    password = c.start(django_user.username, repo_url, auth)
+    password = c.start(django_user.username, repo_url, auth, email, name)
 
     logger.info(django_user.username + " " + password)
 
