@@ -72,7 +72,7 @@ def done(request,  *args, **kwargs):
 
     logger.info(django_user.username + " " + password)
 
-    scheme = urlparse.urlparse(os.getenv('HTTP_REFERER'))[0]
+    scheme = urlparse.urlparse(request.META.get('HTTP_REFERER'))[0]
 
     ctx = {
         'password': password,
