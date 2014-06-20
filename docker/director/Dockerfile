@@ -23,7 +23,7 @@ RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change1
 
 EXPOSE 4242
 
-ENTRYPOINT ["ipydoc_director"]
+#ENTRYPOINT ["ipydoc_director"]
 
 
 
