@@ -72,6 +72,6 @@ COPY ipython_notebook_config.py /.ipython/profile_default/ipython_notebook_confi
 RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change7
 
 EXPOSE 8888
-VOLUMES /notebooks
+VOLUME /notebooks
 
 CMD ipython notebook  --ip=*
