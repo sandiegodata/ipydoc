@@ -173,13 +173,11 @@ class DockerManager(object):
 
         try:
 
-
-
-
             cont = self.client.create_container(self.image,
                                                 detach=True,
                                                 name = container_name,
                                                 ports = [8888],
+                                                volumes_from=os.getenv('VOLUMES_NAME', None),
                                                 environment=env)
         except APIError:
             insp = self.client.inspect_container(container_name)
@@ -224,10 +222,9 @@ class DockerManager(object):
                 else:
                     links = None
 
-                volumes_from = os.getenv('VOLUMES_NAME', None)
 
-                self.client.start(insp['ID'],  port_bindings={8888:port}, binds = binds, links = links,
-                                  volumes_from = volumes_from )
+
+                self.client.start(insp['ID'],  port_bindings={8888:port}, binds = binds, links = links)
                         #lxc_conf=None,
                         #publish_all_ports=False, links=None, privileged=False,
                         #dns=None, dns_search=None, volumes_from=None, network_mode=None)
