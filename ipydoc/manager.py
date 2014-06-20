@@ -372,6 +372,7 @@ class Director(object):
             'IPYTHON_REPO_AUTH': github_auth,
             'GITHUB_EMAIL': github_email,
             'GITHUB_NAME': github_name,
+            'GITHUB_USER': user,
             })
 
         env = c.start(self.redis.port(user))
