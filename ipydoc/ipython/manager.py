@@ -1,3 +1,9 @@
+"""
+
+Copyright (c) 2014 San Diego Regional Data Library. This file is licensed under the terms of the
+Revised BSD License, included in this distribution as LICENSE.txt
+"""
+
 
 from IPython.html.services.notebooks.filenbmanager import FileNotebookManager
 from sh import git
@@ -11,6 +17,8 @@ class GitNotebookManager(FileNotebookManager):
     repo_url = Unicode('', config=True)
     username = Unicode('', config=True)
     password = Unicode('', config=True)
+    email = Unicode('', config=True)
+    name = Unicode('', config=True)
 
     def __init__(self, **kwargs):
         from sh import ErrorReturnCode_128
@@ -21,6 +29,8 @@ class GitNotebookManager(FileNotebookManager):
             raise Exception("Didn't get a repo_url")
 
         self.gss = GitShellService(self.notebook_dir, self.repo_url, username=self.username, password=self.password)
+
+        self.gss.set_ident(self.name, self.email)
 
         try:
             self.log.info("Cloning from {}".format(self.repo_url))

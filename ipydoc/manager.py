@@ -360,7 +360,7 @@ class Director(object):
         self.redis = redis
         self.dispatcher_url = None
 
-    def start(self, user, repo_url=None, github_auth=None):
+    def start(self, user, repo_url=None, github_auth=None, github_email=None, github_name=None):
         from IPython.lib import passwd
         from random import choice
         import string
@@ -372,8 +372,10 @@ class Director(object):
             'IPYTHON_PASSWORD': passwd(password),
             'IPYTHON_CLEAR_PASSWORD': password,
             'IPYTHON_REPO_URL': repo_url,
-            'IPYTHON_REPO_AUTH': github_auth
-        })
+            'IPYTHON_REPO_AUTH': github_auth,
+            'GITHUB_EMAIL': github_email,
+            'GITHUB_NAME': github_name,
+            })
 
         env = c.start(self.redis.port(user))
 

@@ -236,3 +236,9 @@ class GitShellService(object):
         git.pull(self.remote_url)
 
         return True
+
+    def set_ident(self, name, email):
+
+        git.config('user.email', email)
+        git.config('user.name', name)
+

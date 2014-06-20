@@ -23,10 +23,11 @@ class DockerServer(object):
         import ipydoc
         return ipydoc.__version__
 
-    def start(self, user, repo_url=None, github_auth=None):
+    def start(self, user, repo_url=None, github_auth=None, github_email=None, github_name=None):
         """Start an ipython container for a given user"""
         self.logger.info("Starting {}".format(user))
-        r =  self.director.start(user, repo_url=repo_url, github_auth=github_auth)
+        r =  self.director.start(user, repo_url=repo_url, github_auth=github_auth,
+                                 github_email=github_email, github_name=github_name)
 
         import time
 
