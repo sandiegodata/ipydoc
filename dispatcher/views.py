@@ -64,7 +64,7 @@ def done(request,  *args, **kwargs):
         repo = org.create_repo(django_user.username, auto_init=True )
         repo_url = repo.clone_url
 
-    logger.info("!!!"+ user.extra_data)
+    logger.info(user.extra_data)
 
     email = 'bob@bob.com'
     name = 'Nonnie Foobar'

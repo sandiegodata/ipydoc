@@ -69,7 +69,7 @@ COPY ambry.yaml /etc/ambry.yaml
 RUN ipython profile create default
 COPY ipython_notebook_config.py /.ipython/profile_default/ipython_notebook_config.py
 
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change6
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change7
 
 EXPOSE 8888
 CMD ipython notebook  --ip=* --notebook-dir=/notebooks
