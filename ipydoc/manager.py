@@ -218,7 +218,7 @@ class DockerManager(object):
                 host_id = os.getenv('HOSTNAME', False)
 
                 if host_id:
-                    links = { 'director': host_id }
+                    links = [( host_id, 'director')]
                 else:
                     links = None
 
