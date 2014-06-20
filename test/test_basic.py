@@ -4,6 +4,9 @@
 """
 import unittest
 import os
+import logging
+
+logging.basicConfig()
 
 def rm_rf( d):
     """Recursively delete a directory"""
@@ -34,7 +37,7 @@ class TestBase(unittest.TestCase):
 
         d = Director(docker, redis)
 
-        user = 'ericbusboom'
+        user = 'foobar'
 
         #d.stop(user)
 

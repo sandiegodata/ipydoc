@@ -114,7 +114,6 @@ class RedisManager(object):
 
         return int(offset)+self.pc.base_port
 
-
 class DockerManager(object):
     
     client = None
@@ -129,7 +128,6 @@ class DockerManager(object):
 
         self.logger = logging.getLogger(__name__)
 
-
     def _user_to_c_name(self, user):
         return self.container_prefix+user
 
@@ -142,6 +140,20 @@ class DockerManager(object):
 
         except APIError:
             return None
+
+    def get_host_for_user(self, user):
+        return self._user_to_c_id(user)
+
+    def get_user_for_host(self, host_id):
+
+        try:
+            insp = self.client.inspect_container(host_id)
+        except APIError:
+            return False
+
+        name = insp['Name'].replace(self.container_prefix, '').strip('/')
+
+        return name
 
     def inspect(self,user):
 
@@ -199,6 +211,7 @@ class DockerManager(object):
     def start(self, user, port):
         import os
 
+
         container_name = self._user_to_c_name(user)
 
         try:
@@ -213,7 +226,6 @@ class DockerManager(object):
                 external = '/proj/notebooks/{}/'.format(user)
                 internal = '/notebooks'
 
-                    
                 binds = {
                     external: internal
                 }
@@ -228,10 +240,9 @@ class DockerManager(object):
                     links = None
 
 
-
                 self.client.start(insp['ID'],  port_bindings={8888:port}, binds = binds, links = links)
                         #lxc_conf=None,
-                        #publish_all_ports=False, links=None, privileged=False,
+                        #publish_all_ports=False, links=None, privileed=False,
                         #dns=None, dns_search=None, volumes_from=None, network_mode=None)
             
         except APIError as e:
@@ -239,6 +250,29 @@ class DockerManager(object):
 
 
         return insp['Config']['Env']
+
+    def is_running(self, id):
+        '''Return true if the container is running, where id is either the host id or the username for the
+        ipython container '''
+
+        use_id = None
+
+        try:
+            # Try a username
+            container_name = self._user_to_c_name(id)
+
+            insp = self.client.inspect_container(container_name)
+            used_id = container_name
+        except APIError as e:
+            try:
+                # Nope, try a host_id
+                insp = self.client.inspect_container(id)
+                used_id = id
+            except APIError as e:
+                return False
+
+
+        return insp['State']['Running']
 
     def ports(self, host_id):
         insp = self.client.inspect_container(host_id)
@@ -334,14 +368,20 @@ class Director(object):
             if k == 'IPYTHON_CLEAR_PASSWORD':
                 return v
 
-    def stop(self, host_id):
+    def stop(self, name):
+
+        host_id = self.docker.get_host_for_user(name)
 
         self.logout(host_id)
 
         try:
             self.docker.kill(host_id=host_id)
-        except APIError:
+        except APIError as e:
+            print e
             pass
+
+    def is_running(self, id):
+        return self.docker.is_running(id)
 
     def logout(self, host_id):
         """Move the proxy entry for the user back to the dispatcher"""

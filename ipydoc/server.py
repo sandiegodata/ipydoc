@@ -26,7 +26,19 @@ class DockerServer(object):
     def start(self, user, repo_url=None, github_auth=None):
         """Start an ipython container for a given user"""
         self.logger.info("Starting {}".format(user))
-        return self.director.start(user, repo_url=repo_url, github_auth=github_auth)
+        r =  self.director.start(user, repo_url=repo_url, github_auth=github_auth)
+
+        import time
+
+        for i in range(45):
+            if self.is_running(user):
+                return r
+            self.logger.info("Waiting for {} to start ".format(user))
+            time.sleep(.25)
+
+        self.logger.info("Gave up waiting for {} to start ".format(user))
+        return False
+
 
     def stop(self, user):
         """Stop a user's Ipython container"""
@@ -37,6 +49,9 @@ class DockerServer(object):
         """Set the proxy to point to the dispatcher"""
         self.logger.info("Start dispatcher at {}".format(host_id))
         return self.director.activate_dispatcher(host_id)
+
+    def is_running(self, id):
+        return self.director.is_running(id)
 
     def logout(self, host_id):
         """On logout, the IPython process on the container passes to us the whole environment"""
