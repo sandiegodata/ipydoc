@@ -255,6 +255,7 @@ class DockerManager(object):
         '''Return true if the container is running, where id is either the host id or the username for the
         ipython container '''
         import requests
+        import time
 
         use_id = None
 
@@ -280,13 +281,14 @@ class DockerManager(object):
 
         url = "http://{}:{}".format(port.h_address, int(port.h_port))
 
-        retries = 3
+        retries = 12
         for i in range(retries):
             try:
                 r = requests.get(url)
                 if r.status_code == 200:
                     break
             except requests.ConnectionError:
+                time.sleep(.25)
                 continue
 
         if i == retries-1:
