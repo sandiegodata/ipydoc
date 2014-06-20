@@ -193,7 +193,7 @@ class DockerManager(object):
                                                 detach=True,
                                                 name = container_name,
                                                 ports = [8888],
-                                                volumes_from=os.getenv('VOLUMES_NAME', None),
+                                                #volumes_from=os.getenv('VOLUMES_NAME', None),
                                                 environment=env)
         except APIError:
             insp = self.client.inspect_container(container_name)
