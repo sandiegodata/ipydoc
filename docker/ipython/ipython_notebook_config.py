@@ -39,6 +39,7 @@ class LogoutHandler(IPythonHandler):
         c.logout(os.getenv('HOSTNAME'))
 
     def get(self):
+        import time
 
         self.clear_login_cookie()
 
@@ -49,6 +50,8 @@ class LogoutHandler(IPythonHandler):
                        'is disabled.'}
 
         self.send_logout_message()
+
+        time.sleep(3) # Make sure the proxy has moved the entry for ths server
 
         self.write(self.render_template('logout.html',
                     message=message))
