@@ -296,16 +296,7 @@ class DockerManager(object):
         return  ports
 
 
-    def get_user_for_host(self, host_id):
 
-        try:
-            insp = self.client.inspect_container(host_id)
-        except APIError:
-            return False
-
-        name = insp['Name'].replace(self.container_prefix, '').strip('/')
-
-        return name
 
 
 class GitManager(object):
