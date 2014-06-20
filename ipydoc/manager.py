@@ -66,7 +66,12 @@ class RedisManager(object):
 
         backend = 'http://{}:{}'.format(ip, port)
 
-        self.client.rpush(self._make_key(user), backend)
+        return self.set_backend(user, backend)
+
+
+    def set_backend(self, user, url):
+
+        self.client.rpush(self._make_key(user), url)
 
     def ensure_frontend_only(self, user=None):
         """Ensure that only the first item is in the list, the one that has the
@@ -272,6 +277,7 @@ class Director(object):
 
         self.docker = docker
         self.redis = redis
+        self.dispatcher_url = None
 
     def start(self, user, repo_url=None, github_auth=None):
         from IPython.lib import passwd
@@ -300,7 +306,7 @@ class Director(object):
 
     def stop(self, user):
 
-        self.redis.stub(user)
+        self.redis.set_backend(user, self.dispatcher_url)
         try:
             self.docker.kill(user)
         except APIError:
@@ -311,6 +317,6 @@ class Director(object):
 
         port =  self.docker.ports(host_id)[0]
 
-        url = 'http://{}:{}'.format(port.h_address, port.h_port)
+        self.dispatcher_url = 'http://{}:{}'.format(port.h_address, port.h_port)
 
-        self.redis.activate_dispatcher(url)
+        self.redis.activate_dispatcher(self.dispatcher_url )
