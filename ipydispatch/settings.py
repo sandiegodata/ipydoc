@@ -143,7 +143,7 @@ LOGGING = {
 ## Social Auth 
 LOGIN_REDIRECT_URL = '/done'
 
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+#SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 SOCIAL_AUTH_PIPELINE = (
     'social_auth.backends.pipeline.social.social_auth_user',
@@ -160,5 +160,5 @@ SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 GITHUB_APP_ID = '06fa28aa9d43c1f89d54'
 GITHUB_API_SECRET = '2d5ee034234a079d810604491261f610b00e3487'
 
-GITHUB_EXTENDED_PERMISSIONS = ['public_repo', 'gist', 'read:org']
+GITHUB_EXTENDED_PERMISSIONS = ['public_repo', 'gist', 'read:org', 'user:email']
 

@@ -28,6 +28,7 @@ def done(request,  *args, **kwargs):
     from social_auth.models import UserSocialAuth
     from django.contrib.auth.models import User
     from django.conf import settings
+    import json
 
     logger = logging.getLogger('views')
     logger.setLevel(logging.DEBUG)
@@ -66,8 +67,12 @@ def done(request,  *args, **kwargs):
 
     logger.info(user.extra_data)
 
-    email = 'bob@bob.com'
-    name = 'Nonnie Foobar'
+    try:
+        email = eval(django_user.email).get('email') # Why is this a python string? # Prob error in Github class
+    except:
+        email = django_user.email
+
+    name = email
 
     # Call the director service to create the container
     c = zerorpc.Client()
