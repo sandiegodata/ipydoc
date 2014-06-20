@@ -223,12 +223,9 @@ class DockerManager(object):
             else:
                 self.logger.debug('Starting {}'.format(container_name))
             
-                external = '/proj/notebooks/{}/'.format(user)
-                internal = '/notebooks'
 
-                binds = {
-                    external: internal
-                }
+                #binds = {'/proj/notebooks/{}/'.format(user): '/notebooks'}
+                binds = None
 
                 host_id = os.getenv('HOSTNAME', False)
 
