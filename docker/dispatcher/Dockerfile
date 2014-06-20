@@ -19,7 +19,7 @@ RUN dpkg-reconfigure locales
 RUN apt-get install -y build-essential make gcc wget curl git
 RUN apt-get install -y  python python-dev python-pip
 
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kicker15
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #kicker16
 
 RUN ipydoc_manage syncdb  --noinput
 
