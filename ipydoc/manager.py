@@ -214,11 +214,12 @@ class DockerManager(object):
                     external: internal
                 }
 
-
                 host_id = os.getenv('HOSTNAME', False)
 
+                host_name = self.client.inspect_container(host_id)["Name"]
+
                 if host_id:
-                    links = [( host_id, 'director')]
+                    links = [( host_name, 'director')]
                 else:
                     links = None
 
