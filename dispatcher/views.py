@@ -27,7 +27,7 @@ def done(request,  *args, **kwargs):
     import urlparse
     from social_auth.models import UserSocialAuth
     from django.contrib.auth.models import User
-
+    from django.conf import settings
 
     logger = logging.getLogger('views')
     logger.setLevel(logging.DEBUG)
@@ -72,7 +72,8 @@ def done(request,  *args, **kwargs):
 
     logger.info(django_user.username + " " + password)
 
-    scheme = urlparse.urlparse(request.META.get('HTTP_REFERER'))[0]
+
+    scheme = 'https' if getattr(settings, "SOCIAL_AUTH_REDIRECT_IS_HTTPS", False) else 'http'
 
     ctx = {
         'password': password,
