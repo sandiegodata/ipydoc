@@ -51,10 +51,9 @@ class LogoutHandler(IPythonHandler):
 
         self.send_logout_message()
 
-        time.sleep(3) # Make sure the proxy has moved the entry for ths server
+        time.sleep(1) # Make sure the proxy has moved the entry for ths server
 
-        self.write(self.render_template('logout.html',
-                    message=message))
+        self.redirect('/')
 
 import IPython.html.auth.logout as logout
 
