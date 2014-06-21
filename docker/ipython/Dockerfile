@@ -73,5 +73,6 @@ RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change8
 
 EXPOSE 8888
 VOLUME /notebooks
+VOLUME /ambry
 
 CMD ipython notebook  --ip=*
