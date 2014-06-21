@@ -55,7 +55,7 @@ RUN python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 ## Install Ambry
 ##
 
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"#kick1
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"#kick2
 RUN ambry config install -f
 RUN ambry library sync
 
