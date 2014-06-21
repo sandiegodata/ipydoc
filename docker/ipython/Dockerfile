@@ -55,9 +55,9 @@ RUN python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
 ## Install Ambry
 ##
 
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master/support/install-ubuntu.sh)"#kick1
 RUN ambry config install -f
-RUN ambry library sync #kick2
+RUN ambry library sync
 
 # Do this after so the synced bundle databases are in the main libary, not in the cache.
 COPY ambry.yaml /etc/ambry.yaml
