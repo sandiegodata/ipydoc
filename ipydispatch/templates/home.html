@@ -11,15 +11,22 @@
 
 {% block content %}
 
-<div>
-  <h1>Login using Github:</h1>
-  <a rel="nofollow" href="{% url 'socialauth_begin' 'github' %}">GitHub</a></li>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<h1 class="text-center">
+				San Diego Regional Data Library IPython Server
+			</h1>
+			<p>
+                This service offers IPython notebook instances to participants in the San Diego Regional Data Library's
+                Practical Data Analysis Program. To use the server, you will need to be a member of the
+                <a href="https://github.com/SDRDLAnalysts">SDRDL Data Analysts</a> Github orgnaization.
+			</p>
+             <a rel="nofollow" href="{% url 'socialauth_begin' 'github' %}">
+                 <button type="button" class="btn btn-primary btn-lg btn-block  active">Login In With Github</button>
+             </a>
+		</div>
+	</div>
 </div>
-<div>
-   <h1>Logout</h1>
-  <a  rel="nofollow" class="logout" href="/logout/">Logout</a>
-</div>
-
-
 
 {% endblock %}
