@@ -114,6 +114,14 @@ class RedisManager(object):
 
         return int(offset)+self.pc.base_port
 
+    def record_repo(self, repo_url):
+        """Keep track of notebook repos so we can display them later in nbviewer. """
+        offset = self.client.sadd('ipy:all_repos', repo_url)
+
+    def record_user(self, user):
+        """Keep track of notebook users so we can display them later in nbviewer. """
+        offset = self.client.sadd('ipy:all_users', user)
+
 class DockerManager(object):
     
     client = None
@@ -378,6 +386,11 @@ class Director(object):
         env = c.start(self.redis.port(user))
 
         self.redis.activate(user)
+
+        # Keep track of the github repos that are used in the system, so we can references them in
+        # nbviewer.
+        self.redis.record_repo(repo_url)
+        self.redis.record_user(user)
 
         for e in env:
             k,v = e.split('=',1)

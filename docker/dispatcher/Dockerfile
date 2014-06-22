@@ -1,4 +1,4 @@
-# Run the Django application ro login in users with Github and
+# Run the Django application to login in users with Github and
 # redirect to the ipython container
 
 FROM ubuntu:13.04
