@@ -42,12 +42,30 @@ class TestBase(unittest.TestCase):
         #d.stop(user)
 
         repo = 'https://github.com/SDRDLAnalysts/testing.git'
-        auth = 'a50fd9805127e87b0f6099bf75e480128180e795'
+        auth = '...'
 
         password = d.start(user, repo, auth)
 
         print 'Password', password
 
+
+    def test_start_dispatcher(self):
+
+        import ipydoc
+        from ipydoc.manager import DockerManager, RedisManager, Director
+
+        redis = RedisManager(ipydoc.ProxyConfig('ipython.sandiegodata.org', '192.168.1.30'),
+                             'hipache')
+
+        docker = DockerManager(ipydoc.DockerClientRef('tcp://192.168.1.30:4243', '1.9', 10), 'ipython')
+
+        d = Director(docker, redis)
+
+        docker.start_dispatcher(director_port=True) # signal to use local connection info
+
+
+        import time
+        time.sleep(10)
 
     def test_dispatcher(self):
         import ipydoc
@@ -175,4 +193,6 @@ class TestBase(unittest.TestCase):
         except KeyboardInterrupt:
             observer.stop()
         observer.join()
+
+
 

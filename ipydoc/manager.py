@@ -127,6 +127,9 @@ class DockerManager(object):
     client = None
     container_prefix = 'ipynb_'
 
+    dispatcher_image = 'ipynb_dispatcher'
+    dispatcher_container_name = 'ipynb_dispatcher'
+
     def __init__(self, client_ref, image):
     
         self.image = image
@@ -135,6 +138,7 @@ class DockerManager(object):
         self.client = self.client_ref.open()
 
         self.logger = logging.getLogger(__name__)
+
 
     def _user_to_c_name(self, user):
         return self.container_prefix+user
@@ -187,7 +191,8 @@ class DockerManager(object):
 
         self.logger.debug("Removing {}".format(host_id))
 
-        return True
+        return container_id
+
 
     def create(self, user, env={}):
         '''Ensure that a container for the user exists'''
@@ -237,9 +242,8 @@ class DockerManager(object):
 
                 host_id = os.getenv('HOSTNAME', False)
 
-                host_name = self.client.inspect_container(host_id)["Name"]
-
                 if host_id:
+                    host_name = self.client.inspect_container(host_id)["Name"]
                     links = [( host_name, 'director')]
                 else:
                     links = None
@@ -253,6 +257,85 @@ class DockerManager(object):
         except APIError as e:
             print e
 
+
+        return insp['Config']['Env']
+
+    def stop_dispatcher(self):
+        """Stop the dispatcher, and any remaining ipython containers. """
+        id = self.kill(host_id=self.dispatcher_container_name)
+
+        for c in self.client.containers():
+            self.logger.debug("Container! "+str(c))
+
+
+    def start_dispatcher(self, director_port=False):
+        import os
+        import socket
+
+
+
+        if director_port and director_port is not False:
+            env = {'DIRECTOR_PORT' : director_port}
+
+        elif director_port:
+            connect = "tcp://{}:4242".format(socket.gethostbyname(socket.gethostname()))
+
+            env = {'DIRECTOR_PORT' : connect}
+        else:
+
+            env = {}
+
+        self.stop_dispatcher()
+
+        try:
+
+            cont = self.client.create_container(self.dispatcher_image,
+                                                detach=True,
+                                                name=self.dispatcher_container_name,
+                                                tty=True,
+                                                stdin_open=True,
+                                                ports=[8000],
+                                                #volumes_from=os.getenv('VOLUMES_NAME', None),
+                                                environment=env)
+
+            insp = self.client.inspect_container(self.dispatcher_container_name)
+
+        except APIError as e:
+            # It already exists, possibly. There are many other errors on the same class.
+
+            insp = self.client.inspect_container(self.dispatcher_container_name)
+
+        try:
+
+            if insp['State']['Running']:
+                self.logger.debug('Container {} is running'.format(self.dispatcher_container_name))
+
+            else:
+                self.logger.debug('Starting {}'.format(self.dispatcher_container_name))
+
+                links = None
+
+                if director_port is False: # Assume we are running in a docker container
+                    import os
+
+                    try:
+                        local_insp = self.client.inspect_container(os.getenv('HOSTNAME'))
+                    except APIError as e:
+                        raise Exception("Failed to get HOSTNAME or director_port configuration");
+
+                    links = { local_insp['Name'].strip('/'):'director'}
+
+                self.logger.debug('Running dispatcher {} with links {}'.format(insp['ID'], links))
+
+                self.client.start(insp['ID'], publish_all_ports=True, links = links)
+
+                #lxc_conf=None,
+                #publish_all_ports=False, links=None, privileed=False,
+                #dns=None, dns_search=None, volumes_from=None, network_mode=None)
+
+        except APIError as e:
+            raise
+            print e
 
         return insp['Config']['Env']
 
@@ -364,6 +447,10 @@ class Director(object):
         self.docker = docker
         self.redis = redis
         self.dispatcher_url = None
+
+    def init(self, director_port=False):
+
+        self.docker.start_dispatcher(director_port = director_port)
 
     def start(self, user, repo_url=None, github_auth=None, github_email=None, github_name=None):
         from IPython.lib import passwd

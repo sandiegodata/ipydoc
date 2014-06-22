@@ -17,6 +17,8 @@ class DockerServer(object):
         self.director = director
         self.logger = logger
 
+        self.director.init()
+
 
     def version(self):
         """Return the version number"""
@@ -117,9 +119,13 @@ if __name__ == '__main__':
         logging.basicConfig()
         logger.setLevel(logging.DEBUG)
 
+
     redis_ = RedisManager(ProxyConfig(args.proxy_domain, backend_host), args.redis)
 
     docker = DockerManager(DockerClientRef(args.docker,'1.9', 10), args.image)
+
+    if args.debug:
+        docker.logger.setLevel(logging.DEBUG)
 
     d = Director(docker, redis_)
 
@@ -127,4 +133,11 @@ if __name__ == '__main__':
 
     s = zerorpc.Server(DockerServer(d, logger))
     s.bind("tcp://{}:{}".format(args.host, args.port))
-    s.run()
+
+    try:
+        s.run()
+    except:
+        raise
+    finally:
+        docker.stop_dispatcher()
+
