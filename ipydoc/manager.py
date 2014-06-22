@@ -265,9 +265,15 @@ class DockerManager(object):
         id = self.kill(host_id=self.dispatcher_container_name)
 
         for c in self.client.containers():
-            if c['Names'].contains('/'+self.container_prefix) and not c['Names'].contains('director'):
-                self.logger.debug("Killing "+c['Names'][0])
-                self.kill(host_id=c['Id'])
+            for name in c['Names']:
+
+                if name.contains('director'):
+                    break
+
+                if name.contains('/'+self.container_prefix):
+                    self.logger.debug("Killing "+name)
+                    self.kill(host_id=c['Id'])
+                    break
 
 
     def start_dispatcher(self, director_port=False):
