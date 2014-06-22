@@ -56,3 +56,9 @@ Development Notes
 -----------------
 
 The django manage.py script is moved to scripts/ipydoc_manage
+
+When working on the dispatcher and  running the server locally, you will have to comment out, in settings.py:
+
+    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
+Or, you will get an error about "Authentication failed: The redirect_uri MUST match the registered callback URL for this application."

@@ -136,6 +136,10 @@ LOGGING = {
             'handlers': ['file'],
             'level': 'DEBUG',
         },
+        'any': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+        },
     }
 }
 
@@ -143,13 +147,13 @@ LOGGING = {
 ## Social Auth 
 LOGIN_REDIRECT_URL = '/done'
 
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+#SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 SOCIAL_AUTH_PIPELINE = (
     'social_auth.backends.pipeline.social.social_auth_user',
-    #'social_auth.backends.pipeline.associate.associate_by_email',
+    #'social_auth.backends.pipeline.assoc iate.associate_by_email',
     'social_auth.backends.pipeline.user.get_username',
-    'social_auth.backends.pipeline.user.create_user',
+    'dispatcher.authpipe.create_user', # Previously 'social_auth.backends.pipeline.user.create_user',
     'social_auth.backends.pipeline.social.associate_user',
     'social_auth.backends.pipeline.social.load_extra_data',
     'social_auth.backends.pipeline.user.update_user_details'
