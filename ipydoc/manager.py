@@ -267,6 +267,8 @@ class DockerManager(object):
         for c in self.client.containers():
             for name in c['Names']:
 
+                name = str(name)
+
                 if name.contains('director'):
                     break
 
