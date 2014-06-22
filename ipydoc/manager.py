@@ -269,10 +269,10 @@ class DockerManager(object):
 
                 name = str(name)
 
-                if name.contains('director'):
+                if 'director' in  name:
                     break
 
-                if name.contains('/'+self.container_prefix):
+                if '/'+self.container_prefix in name:
                     self.logger.debug("Killing "+name)
                     self.kill(host_id=c['Id'])
                     break
