@@ -25,11 +25,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '$jjj@t5-o13h1h_3vhr6+!#t)4bb4o!odg0$7bppfsam$_da)$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
+if False:
+    DEBUG = True
+    TEMPLATE_DEBUG = True
+    ALLOWED_HOSTS = []
+else:
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    ALLOWED_HOSTS = ['sandieodata.org', '127.0.0.1']
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -54,6 +58,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'sslify.middleware.SSLifyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
