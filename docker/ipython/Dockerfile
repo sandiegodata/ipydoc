@@ -69,7 +69,7 @@ COPY ambry.yaml /etc/ambry.yaml
 RUN ipython profile create default
 COPY ipython_notebook_config.py /.ipython/profile_default/ipython_notebook_config.py
 
-RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change8
+RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change9
 
 EXPOSE 8888
 VOLUME /notebooks
