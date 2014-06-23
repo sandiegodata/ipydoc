@@ -1,12 +1,11 @@
-ipydoc -- Docker for multi-user IPython
-==============
+# ipydoc -- Docker for multi-user IPython
+
 
 This is very, very alpha code for creating a network of Docker containers that will spawn an IPython container
 for each authorized user. 
 
 
-Design Overview
------------------------
+## Design Overview
 
 The design involves several different types of containers:
 
@@ -28,23 +27,24 @@ NOTE! The system requires a hipache proxy, and hipache requires redis. Neither o
 although they should be.
 
 
-Initial Setup
------------------------
+# Initial Setup
 
 * Build the containers, as listed in docker/build.sh
 
 * Run the containers, as described in "Run the Containers" below.
 
+# Running the containers
 
-Building the Containers
------------------------
+    $ docker run -d -t -i -v /data/ipynb/cache:/cache -v /data/ipynb/notebooks:/notebooks --name ipynb_volumes ipynb_volumes
 
-Configuration
--------------
+    $ docker run -d -t -i  -P --name ipynb_director ipynb_director  -I ipynb_ipython -P ipython.sandiegodata.org -R hipache  -D "tcp://barker:4243"
 
-dispatcher
-++++++++++
+    $ docker run -d -t -i  -P --link ipynb_director:director --name ipynb_dispatcher ipynb_dispatcher
 
+
+## Development Notes
+
+### dispatcher
 
 * DIRECTOR_PORT or --link ipynb_director:director
 
@@ -69,9 +69,7 @@ Or, with the development server.
     HOSTNAME=29357b94a392 DIRECTOR_PORT=tcp://barker:49153  scripts/ipydoc_manage runserver
 
 
-
-director
-++++++++
+### director
 
 The director takes a lot of command line options, which you can get by  running:
 
@@ -96,18 +94,9 @@ You can test that it is working with:
 
     $ zerorpc tcp://localhost:4242 version
 
-Running the containers
-----------------------
-
-    $ docker run -d -t -i -v /data/ipynb/cache:/cache -v /data/ipynb/notebooks:/notebooks --name ipynb_volumes ipynb_volumes
-
-    $ docker run -d -t -i  -P --name ipynb_director ipynb_director  -I ipynb_ipython -P ipython.sandiegodata.org -R hipache  -D "tcp://barker:4243"
-
-    $ docker run -d -t -i  -P --link ipynb_director:director --name ipynb_dispatcher ipynb_dispatcher
 
 
-Development Notes
------------------
+### Misc
 
 The django manage.py script is moved to scripts/ipydoc_manage
 
