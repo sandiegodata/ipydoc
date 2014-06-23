@@ -24,13 +24,30 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
 
+
+# Generate a new SECRET_KEY the first time the application is run. 
+try:
+    from secret_key import *
+except ImportError:
+    SETTINGS_DIR=os.path.abspath(os.path.dirname(__file__))
+
+    from django.utils.crypto import get_random_string
+    import string
+    import os
+
+    with open(os.path.join(os.path.dirname(__file__), 'secret_key.py'),'w') as f:
+        f.write("SECRET_KEY ='{}'".format(get_random_string(50,
+                'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)')))
+
+    from secret_key import *
+
+
 if False: # Set to True for debugging
-    SECRET_KEY = '$jjj@t5-o13h1h_3vhr6+!#t)4bb4o!odg0$7bppfsam$_da)$'
+
     DEBUG = True
     TEMPLATE_DEBUG = True
     ALLOWED_HOSTS = []
 else:
-    SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
     DEBUG = False
     TEMPLATE_DEBUG = False
     ALLOWED_HOSTS = ['sandieodata.org', '127.0.0.1']

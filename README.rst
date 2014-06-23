@@ -4,6 +4,17 @@ ipydoc -- a Docker system for multi-user IPython
 This is very alpha code for creating a network of Docker containers that will spawn an IPython container 
 for each authorized user. 
 
+Design Overview
+-----------------------
+
+
+
+Initial Setup
+-----------------------
+
+
+
+
 Building the Containers
 -----------------------
 
