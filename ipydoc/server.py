@@ -102,7 +102,8 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--backend-host', type=str, help='Host address of the ipython containers, usually the docker host')
     parser.add_argument('-I', '--image', type=str, default='ipynb_ipython', help='Name of docker images for ipython container')
 
-    parser.add_argument('-R', '--redis', type=str, required=True, help='Redis host')
+    parser.add_argument('-C', '--hipache', type=str, required=True, help='Hipache image name. If set, is ensured to be running')
+    parser.add_argument('-R', '--redis', type=str, required=True, help='Redis host. if not set, it is the hipache host')
 
     args = parser.parse_args()
 
