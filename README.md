@@ -1,18 +1,39 @@
 ipydoc -- a Docker system for multi-user IPython 
 ==============
 
-This is very alpha code for creating a network of Docker containers that will spawn an IPython container 
+This is very, very alpha code for creating a network of Docker containers that will spawn an IPython container
 for each authorized user. 
+
 
 Design Overview
 -----------------------
 
+The design involves several different types of containers:
+
+* Director. The Director provides a zerorpc server that creates the dispatcher and IPython containers.
+* Dispatcher. The dispatcher is a Django web application where the user logs in with Github. After authorization,
+    it contacts the Director to create the user's IPYthon container and updates the proxy.
+* Proxy. A hipache proxy that sends requests to a user's domain to the correct container.
+
+In our use, the Dispatcher web application, running  https://ipython.sandiegodata.org, allows users to log in with
+Github credientials. If the user is a member of the configured orgnaization (  https://github.com/SDRDLAnalysts ) the
+dispatcher creates an IPython container for the user, at a domain named by the user's Github user name.
+( Mine are at https://ericbusboom.ipython,sandiegodata.org )
+
+When it starts, the IPython container clones a github repo at the organization with the same name as the user.
+( Mine is https://github.com/SDRDLAnalysts/ericbusboom ). Everytime IPython saves a file, the IPython application,
+through a special Notebook manager class, pushes the changes to Github.
+
+NOTE! The system requires a hipache proxy, and hipache requires redis. Neither of these are currently containerized,
+although they should be.
 
 
 Initial Setup
 -----------------------
 
+* Build the containers, as listed in docker/build.sh
 
+* Run the containers, as described in "Run the Containers" below.
 
 
 Building the Containers

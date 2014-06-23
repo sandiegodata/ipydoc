@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-# Generate a new SECRET_KEY the first time the application is run. 
+# Generate a new SECRET_KEY the first time the application is run.
 try:
     from secret_key import *
 except ImportError:
