@@ -1,4 +1,4 @@
-ipydoc -- a Docker system for multi-user IPython 
+ipydoc -- Docker for multi-user IPython
 ==============
 
 This is very, very alpha code for creating a network of Docker containers that will spawn an IPython container
