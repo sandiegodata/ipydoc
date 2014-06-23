@@ -1,8 +1,8 @@
-ipython-docker
+ipydoc -- a Docker system for multi-user IPython 
 ==============
 
-Dockerfiles and scripts for running ipython 
-
+This is very alpha code for creating a network of Docker containers that will spawn an IPython container 
+for each authorized user. 
 
 Building the Containers
 -----------------------
