@@ -17,7 +17,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     readme = f.read()
 
 packages = [
