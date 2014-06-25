@@ -59,6 +59,9 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarinova/ambry/master
 RUN ambry config install -f
 RUN ambry library sync
 
+# This is a second one, meant for updating the sync done in the first one.
+RUN ambry library sync
+
 # Do this after so the synced bundle databases are in the main libary, not in the cache.
 COPY ambry.yaml /etc/ambry.yaml
 
@@ -75,5 +78,7 @@ RUN pip install 'git+https://github.com/sdrdl/ipydoc.git#egg=ipydoc' #change2
 EXPOSE 8888
 VOLUME /notebooks
 VOLUME /ambry
+
+
 
 CMD ipython notebook  --ip=*
